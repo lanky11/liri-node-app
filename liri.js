@@ -12,13 +12,19 @@ var Twitter = require('twitter');
 // Spotify npm package
 var Spotify = require('node-spotify-api');
 
+// access your keys.js information
+var keys = require("./keys.js");
 
-// var spotify = new Spotify(keys.spotify);
-// var client = new Twitter(keys.twitter);
+// variables for twitter and spotify keys
+var spotify = new Spotify(keys.spotify);
+var client = new Twitter(keys.twitter);
+
+
 
 
 // Capture user input
 //=================================================================================================================================
+
 var userInstruct = process.argv[2];
 var userSearch = process.argv[3];
 
@@ -28,19 +34,90 @@ var userSearch = process.argv[3];
 
 if (userInstruct === "my-tweets") {
   
-  twitter();
+  myTweets();
   
 } else if (userInstruct === "spotify-this-song") {
   
-  spotify();
+  spotifyThisSong();
   
 } else if (userInstruct === "movie-this") {
   
-  movie();
+  movieThis();
   
 } else if (userInstruct === "do-what-it-says") {
   
   doWhatItSays();
+  
+} else {
+  
+  console.log("Invalid response!  Please enter one of the following valid arguments,my-tweets, spotify-this-song, movie-this, do-what-it-says.");
+  
+}
+
+
+
+// Twitter Function
+//=================================================================================================================================
+
+
+function myTweets() {
+  
+  // node liri.js my-tweets
+  // This will show your last 20 tweets and when they were created at in your terminal/bash window.
+  
+  
+}
+
+
+// Spotify Function
+//=================================================================================================================================
+
+
+function spotifyThisSong() {
+  
+  // node liri.js spotify-this-song '<song name here>'
+  
+  var trackSearch;
+  
+  // if process.argv[3] is blank
+  if(!userSearch) {
+    
+    // If no song is provided then your program will default to "The Sign" by Ace of Base.
+    trackSearch = "The Sign";
+    
+  } else {
+    
+    trackSearch = userSearch;
+    
+  }
+  
+  
+  
+  spotify.search({ type: 'track', query: trackSearch, limit: 10 }, function(err, data) {
+    
+    if (err) {
+      return console.log('Error occurred: ' + err);
+    } else {
+      
+      console.log(data);
+      
+      for (var i=0; i<5; i++) {
+        
+        console.log("================================================== liri ==================================================")
+        // Artist(s)
+        console.log("Artist: " + data.tracks.items[i].artists[0].name);
+        // The song's name
+        console.log("Song: " + data.tracks.items[i].name);
+        // A preview link of the song from Spotify
+        console.log("Preview link: " + data.tracks.items[i].preview_url);
+        // The album that the song is from
+        console.log("Album: " + data.tracks.items[i].album.name);
+
+      }
+
+    }
+   
+  });
   
 }
 
@@ -49,14 +126,14 @@ if (userInstruct === "my-tweets") {
 // Movie Function
 //=================================================================================================================================
 
-function movie() {
+function movieThis() {
+  
+  // node liri.js movie-this '<movie name here>'
   
   var userMovieSearch;
   
-  // node liri.js movie-this '<movie name here>'
-
-  // if process.argv[3] is blank then the user
-  if (userSearch === "") {
+  // if process.argv[3] is blank
+  if (!userSearch) {
     
     // If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
     userMovieSearch = "Mr. Nobody";
@@ -64,21 +141,13 @@ function movie() {
   } else {
     
     userMovieSearch = userSearch;
-    
+
   }
   
-  console.log(userMovieSearch);
-  
   url = "http://www.omdbapi.com/";
-
   apiKey = "?apikey=" + "trilogy";
-  
   movieName = "&t=" + userMovieSearch;
-  
-  queryUrl = url + apiKey + movieName
-  
-  console.log(queryUrl);
-  
+  queryUrl = url + apiKey + movieName;
   
   request(queryUrl, function (error, response, body) {
     
@@ -105,10 +174,12 @@ function movie() {
     }
     
   });
-  
+ 
 }
 
 
+
+// fs random function
 //=================================================================================================================================
 
 function doWhatItSays() {
@@ -124,52 +195,6 @@ function doWhatItSays() {
 
 
 
-//=================================================================================================================================
-
-
-
-
-function spotify() {
-  
-  // node liri.js spotify-this-song '<song name here>'
-  // This will show the following information about the song in your terminal/bash window
-
-  // Artist(s)
-  // The song's name
-  // A preview link of the song from Spotify
-  // The album that the song is from
-  
-  // If no song is provided then your program will default to "The Sign" by Ace of Base.
-  
-  
-}
-
-
-
-
-
-
-
-
-
 
 //=================================================================================================================================
-
-
-
-function twitter() {
-  
-  // node liri.js my-tweets
-  // This will show your last 20 tweets and when they were created at in your terminal/bash window.
-  
-  
-}
-
-
-
-
-
-
-
-
-//=================================================================================================================================
+// THE END
