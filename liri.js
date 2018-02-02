@@ -38,7 +38,7 @@ if (userInstruct === "my-tweets") {
   
 } else if (userInstruct === "spotify-this-song") {
   
-  spotifyThisSong();
+  spotifyThisSong(userSearch);
   
 } else if (userInstruct === "movie-this") {
   
@@ -50,8 +50,14 @@ if (userInstruct === "my-tweets") {
   
 } else {
   
-  console.log("Invalid response!  Please enter one of the following valid arguments,my-tweets, spotify-this-song, movie-this, do-what-it-says.");
-  
+  console.log("================================================== liri ==================================================");
+  console.log("Invalid response!");
+  console.log("Please enter one of the following valid arguments.");
+  console.log("my-tweets");
+  console.log("spotify-this-song");
+  console.log("movie-this");
+  console.log("do-what-it-says.");
+  console.log("================================================== liri ==================================================");
 }
 
 
@@ -66,18 +72,18 @@ function myTweets() {
   // This will show your last 20 tweets and when they were created at in your terminal/bash window.
   
   
+  
 }
 
 
 // Spotify Function
 //=================================================================================================================================
 
-
-function spotifyThisSong() {
+function spotifyThisSong(song) {
   
   // node liri.js spotify-this-song '<song name here>'
   
-  var trackSearch;
+  var trackSearch = song;
   
   // if process.argv[3] is blank
   if(!userSearch) {
@@ -91,19 +97,21 @@ function spotifyThisSong() {
     
   }
   
-  
-  
+
   spotify.search({ type: 'track', query: trackSearch, limit: 10 }, function(err, data) {
     
     if (err) {
       return console.log('Error occurred: ' + err);
     } else {
       
-      console.log(data);
+      // counter
+      var responseCounter = 1;
       
-      for (var i=0; i<5; i++) {
+      for (var i=0; i<10; i++) {
         
-        console.log("================================================== liri ==================================================")
+        console.log("================================================== liri ==================================================");
+        console.log("liri response " + responseCounter + " of 10");
+        responseCounter++;
         // Artist(s)
         console.log("Artist: " + data.tracks.items[i].artists[0].name);
         // The song's name
@@ -112,7 +120,7 @@ function spotifyThisSong() {
         console.log("Preview link: " + data.tracks.items[i].preview_url);
         // The album that the song is from
         console.log("Album: " + data.tracks.items[i].album.name);
-
+        
       }
 
     }
@@ -185,14 +193,39 @@ function movieThis() {
 function doWhatItSays() {
   
   // node liri.js do-what-it-says
-
   // Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-
-
   // It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
-  // Feel free to change the text in that document to test out the feature for other commands.
-}
+  
+  fs.readFile("random.txt", "utf8", function(error, data) {
 
+    if (error) {
+      return console.log(error);
+    }
+  
+    // We will then print the contents of data
+    // console.log("Data: " + data);
+  
+    // Then split it by commas (to make it more readable)
+    var dataArr = data.split(",");
+  
+    // liri instructions
+    // console.log("Inside fs.readFile: " + dataArr[0]);
+    userInstruct = dataArr[0];
+    // song search
+    // console.log("Inside fs.readFile: " + dataArr[1]);
+    userSearch = dataArr[1];
+    
+    // Call spotify function and pass in the 2nd argument 
+    spotifyThisSong(userSearch);
+  
+  });
+  
+  // userInstruct;
+  // console.log("Outside fs.readFile: " + userInstruct);
+  // userSearch;
+  // console.log("Outside fs.readFile: " + userSearch);
+
+}
 
 
 
