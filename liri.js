@@ -20,8 +20,6 @@ var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
 
-
-
 // Capture user input
 //=================================================================================================================================
 
@@ -70,9 +68,21 @@ function myTweets() {
   
   // node liri.js my-tweets
   // This will show your last 20 tweets and when they were created at in your terminal/bash window.
-  
-  
-  
+
+  var params = {screen_name: 'GolfDigest'};
+  client.get('statuses/user_timeline', params, function(error, tweets, response){
+    
+  if (!error) {
+	    
+	    for(i=1; i<tweets.length; i++){
+	    	console.log(tweets[i].created_at);
+	    	console.log(tweets[i].text);
+	    	console.log("===============================================================================================================");
+	    
+	      
+	    }
+	  }
+	});
 }
 
 
