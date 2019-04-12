@@ -1,3 +1,5 @@
 # liri-node-app
 
-Homework #8 Due 2/07/2018
+Command line Siri clone.
+
+Use Liri to search twitter, Spotify or for movies via the IMDB database.
